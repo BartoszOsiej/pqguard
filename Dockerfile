@@ -1,14 +1,19 @@
-# ── Stage 1: Build ──
-FROM rust:1.80-slim AS builder
-WORKDIR /build
-COPY . .
-RUN cargo build --release
+# Stage 1: Build
+FROM rust:1.83-slim AS builder
 
-# ── Stage 2: Runtime ──
-FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /build/target/release/pqguard /usr/local/bin/pqguard
-RUN useradd -m pqguard
-USER pqguard
-WORKDIR /home/pqguard
+RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY Cargo.toml Cargo.lock ./
+COPY src/ src/
+
+RUN cargo build --release && strip target/release/pqguard
+
+# Stage 2: Runtime (distroless)
+FROM gcr.io/distroless/cc-debian12:nonroot AS runtime
+
+COPY --from=builder /app/target/release/pqguard /usr/local/bin/pqguard
+
+USER nonroot:nonroot
+
 ENTRYPOINT ["pqguard"]
