@@ -1,4 +1,4 @@
-Output assets/pqguard-demo.svg
+Output assets/pqguard-demo.gif
 
 Set FontSize 16
 Set Width 960

@@ -164,4 +164,4 @@ MIT
 
 ## 📺 Demo
 
-![pqguard Demo](assets/pqguard-demo.svg)
+![pqguard Demo](assets/pqguard-demo.gif)
