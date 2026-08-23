@@ -22,7 +22,7 @@ ml-kem = { version = "0.2", features = ["std"] }
 hkdf = "0.12"
 sha2 = "0.10"
 # Symmetric encryption
-aes-gcm = "0.10"
+aes-gcm = "0.11"
 # Random number generation
 rand = "0.8"
 # Encoding
