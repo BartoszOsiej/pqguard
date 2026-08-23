@@ -20,7 +20,7 @@ clap = { version = "4", features = ["derive"] }
 ml-kem = { version = "0.2", features = ["std"] }
 # Key derivation
 hkdf = "0.12"
-sha2 = "0.10"
+sha2 = "0.11"
 # Symmetric encryption
 aes-gcm = "0.10"
 # Random number generation
