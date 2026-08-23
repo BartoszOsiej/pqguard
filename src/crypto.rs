@@ -164,3 +164,30 @@ pub fn symmetric_decrypt(
         .decrypt(Nonce::from_slice(nonce), ciphertext)
         .map_err(|e| anyhow::anyhow!("Decryption failed: {}", e))
 }
+
+/// High-level encrypt: encapsulate KEM → derive key → AES-GCM encrypt.
+/// Returns a SealedEnvelope.
+pub fn encrypt_bytes(ek_bytes: &[u8], plaintext: &[u8]) -> Result<SealedEnvelope> {
+    let salt = generate_salt();
+    let nonce = generate_nonce();
+    let (shared_secret, kem_ciphertext) = kem_encapsulate(ek_bytes)?;
+    let symmetric_key = derive_key(&shared_secret, &salt)?;
+    let encrypted_data = symmetric_encrypt(&symmetric_key, &nonce, plaintext)?;
+    Ok(SealedEnvelope {
+        kem_ciphertext,
+        symmetric_nonce: nonce,
+        salt,
+        encrypted_data,
+    })
+}
+
+/// High-level decrypt: decapsulate KEM → derive key → AES-GCM decrypt.
+pub fn decrypt_bytes(dk_bytes: &[u8], envelope: &SealedEnvelope) -> Result<Vec<u8>> {
+    let shared_secret = kem_decapsulate(dk_bytes, &envelope.kem_ciphertext)?;
+    let symmetric_key = derive_key(&shared_secret, &envelope.salt)?;
+    symmetric_decrypt(
+        &symmetric_key,
+        &envelope.symmetric_nonce,
+        &envelope.encrypted_data,
+    )
+}
