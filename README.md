@@ -6,6 +6,13 @@
 
 </div># 🔒 pqguard
 
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Rust](https://img.shields.io/badge/Rust-2021-DEA584?style=flat-square&logo=rust)
+![crates.io](https://img.shields.io/crates/v/pqguard?style=flat-square&label=crates.io&logo=rust)
+![CI](https://img.shields.io/github/actions/workflow/status/BartoszOsiej/pqguard/ci.yml?style=flat-square&label=CI)
+![OpenSSF](https://img.shields.io/ossf-scorecard/github.com/BartoszOsiej/pqguard?style=flat-square)
+![Downloads](https://img.shields.io/crates/d/pqguard?style=flat-square)
+
 **Post-quantum file encryption CLI** — ML-KEM-768 (FIPS 203) + AES-256-GCM
 
 Encrypt files using NIST-standardized post-quantum algorithms that resist both classical and quantum computer attacks.

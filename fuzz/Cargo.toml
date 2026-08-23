@@ -1,0 +1,32 @@
+[package]
+name = "pqguard-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.pqguard]
+path = ".."
+
+[[bin]]
+name = "fuzz_envelope"
+path = "fuzz_targets/fuzz_envelope.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_key_derivation"
+path = "fuzz_targets/fuzz_key_derivation.rs"
+test = false
+doc = false
+
+[[bin]]
+name = "fuzz_decrypt"
+path = "fuzz_targets/fuzz_decrypt.rs"
+test = false
+doc = false
