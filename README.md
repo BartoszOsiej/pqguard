@@ -140,3 +140,10 @@ The "harvest now, decrypt later" threat means data encrypted today with classica
 ## 📜 License
 
 MIT
+---
+
+![License](https://img.shields.io/github/license/BartoszOsiej/pqguard?style=flat-square)
+![Top Language](https://img.shields.io/github/languages/top/BartoszOsiej/pqguard?style=flat-square)
+![Last Commit](https://img.shields.io/github/last-commit/BartoszOsiej/pqguard?style=flat-square)
+![Repo Size](https://img.shields.io/github/repo-size/BartoszOsiej/pqguard?style=flat-square)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/BartoszOsiej/pqguard/badge)](https://securityscorecards.dev/viewer/?uri=github.com/BartoszOsiej/pqguard)
