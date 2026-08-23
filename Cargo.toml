@@ -1,0 +1,46 @@
+[package]
+name = "pqguard"
+version = "0.1.0"
+edition = "2021"
+description = "Post-quantum file encryption CLI — ML-KEM-768 + AES-256-GCM"
+license = "MIT"
+repository = "https://github.com/BartoszOsiej/pqguard"
+readme = "README.md"
+keywords = ["post-quantum", "cryptography", "ml-kem", "encryption", "cli"]
+categories = ["command-line-utilities", "cryptography"]
+
+[[bin]]
+name = "pqguard"
+path = "src/main.rs"
+
+[dependencies]
+# CLI
+clap = { version = "4", features = ["derive"] }
+# Post-quantum KEM (ML-KEM-768 / Kyber768) — RustCrypto standard
+ml-kem = { version = "0.2", features = ["std"] }
+# Key derivation
+hkdf = "0.12"
+sha2 = "0.10"
+# Symmetric encryption
+aes-gcm = "0.10"
+# Random number generation
+rand = "0.8"
+# Encoding
+base64 = "0.22"
+# Errors
+anyhow = "1"
+# Colors
+colored = "2"
+
+[dev-dependencies]
+tempfile = "3"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bench]]
+name = "pqguard_bench"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
