@@ -1,7 +1,7 @@
-use std::fs;
-use std::path::PathBuf;
 use anyhow::{bail, Result};
 use colored::*;
+use std::fs;
+use std::path::PathBuf;
 
 use crate::crypto;
 use crate::keyfile;
@@ -13,7 +13,9 @@ pub fn encrypt_file(
     _sender_key_path: Option<&str>,
 ) -> Result<PathBuf> {
     let plaintext = fs::read(input_path)?;
-    if plaintext.is_empty() { bail!("Input file is empty"); }
+    if plaintext.is_empty() {
+        bail!("Input file is empty");
+    }
 
     let recipient_pk = keyfile::load_public_key(recipient_pubkey_path)?;
     let salt = crypto::generate_salt();
@@ -44,7 +46,13 @@ pub fn encrypt_file(
     fs::write(&out_path, &envelope_bytes)?;
 
     let ratio = (data_len as f64 / plaintext.len() as f64) * 100.0;
-    println!("   {} {} bytes → {} bytes ({:.1}%)", "Size:".dimmed(), plaintext.len(), data_len, ratio);
+    println!(
+        "   {} {} bytes → {} bytes ({:.1}%)",
+        "Size:".dimmed(),
+        plaintext.len(),
+        data_len,
+        ratio
+    );
     println!("   {} {}", "KEM:".dimmed(), crypto::KEM_ALG);
     println!("   {} {}", "Cipher:".dimmed(), crypto::SYMMETRIC_ALG);
 
@@ -56,8 +64,16 @@ pub fn verify_file(input_path: &str) -> Result<()> {
     match crypto::SealedEnvelope::from_bytes(&data) {
         Ok(envelope) => {
             println!("{}", "✅ Valid pqguard file".green().bold());
-            println!("   {} {} bytes", "KEM ciphertext:".dimmed(), envelope.kem_ciphertext.len());
-            println!("   {} {} bytes", "Encrypted data:".dimmed(), envelope.encrypted_data.len());
+            println!(
+                "   {} {} bytes",
+                "KEM ciphertext:".dimmed(),
+                envelope.kem_ciphertext.len()
+            );
+            println!(
+                "   {} {} bytes",
+                "Encrypted data:".dimmed(),
+                envelope.encrypted_data.len()
+            );
             Ok(())
         }
         Err(e) => {

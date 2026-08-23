@@ -1,7 +1,7 @@
-use std::fs;
-use std::path::{Path, PathBuf};
 use anyhow::Result;
 use colored::*;
+use std::fs;
+use std::path::{Path, PathBuf};
 
 use crate::crypto;
 use crate::keyfile;
@@ -24,13 +24,21 @@ pub fn decrypt_file(
     let symmetric_key = crypto::derive_key(&shared_secret, &envelope.salt)?;
 
     // AES-256-GCM decrypt
-    let plaintext = crypto::symmetric_decrypt(&symmetric_key, &envelope.symmetric_nonce, &envelope.encrypted_data)?;
+    let plaintext = crypto::symmetric_decrypt(
+        &symmetric_key,
+        &envelope.symmetric_nonce,
+        &envelope.encrypted_data,
+    )?;
 
     let out_path = match output_path {
         Some(p) => PathBuf::from(p),
         None => {
             let p = Path::new(input_path);
-            let stem = p.file_stem().unwrap_or_default().to_string_lossy().to_string();
+            let stem = p
+                .file_stem()
+                .unwrap_or_default()
+                .to_string_lossy()
+                .to_string();
             let parent = p.parent().unwrap_or(Path::new("."));
             parent.join(stem)
         }

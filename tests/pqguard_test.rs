@@ -12,7 +12,11 @@ fn test_full_cycle() {
         .args(["keygen", "-o", &dir_path.to_string_lossy(), "-n", "test"])
         .output()
         .unwrap();
-    assert!(output.status.success(), "keygen failed: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "keygen failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 
     let pub_key = dir_path.join("test.pqg.pub");
     let priv_key = dir_path.join("test.pqg.key");
@@ -34,7 +38,11 @@ fn test_full_cycle() {
         ])
         .output()
         .unwrap();
-    assert!(output.status.success(), "encrypt failed: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "encrypt failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 
     let encrypted_file = dir_path.join("test_input.pqg");
     assert!(encrypted_file.exists());
@@ -52,7 +60,11 @@ fn test_full_cycle() {
         ])
         .output()
         .unwrap();
-    assert!(output.status.success(), "decrypt failed: {}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "decrypt failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 
     // Verify content matches
     let decrypted_content = fs::read(&decrypted_file).unwrap();
@@ -102,7 +114,10 @@ fn test_wrong_key_fails() {
         ])
         .output()
         .unwrap();
-    assert!(!output.status.success(), "Decrypt with wrong key should fail");
+    assert!(
+        !output.status.success(),
+        "Decrypt with wrong key should fail"
+    );
 }
 
 // Test verify command

@@ -1,8 +1,8 @@
+use anyhow::{bail, Result};
+use base64::Engine;
+use colored::*;
 use std::fs;
 use std::path::{Path, PathBuf};
-use anyhow::{bail, Result};
-use colored::*;
-use base64::Engine;
 
 use crate::crypto;
 
@@ -11,7 +11,6 @@ use crate::crypto;
 /// Line 2: algorithm identifier
 /// Line 3: base64-encoded key data
 /// Line 4: optional metadata (name, created_at)
-
 struct KeyHeader {
     key_type: String,
     algorithm: String,

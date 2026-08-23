@@ -1,8 +1,4 @@
-mod crypto;
-mod keygen;
-mod encrypt;
-mod decrypt;
-mod keyfile;
+use pqguard::{decrypt, encrypt, keygen};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
@@ -87,23 +83,53 @@ fn main() -> Result<()> {
         Commands::Keygen { output, name } => {
             println!("{}", "🔐 Generating post-quantum keypair...".cyan().bold());
             let paths = keygen::generate_keypair(&output, &name)?;
-            println!("{} {} {}", "✅".green(), "Keypair generated:".green().bold(), "");
+            println!("{} {}", "✅".green(), "Keypair generated:".green().bold(),);
             println!("   {} {}", "Public key:".dimmed(), paths.0.display());
             println!("   {} {}", "Private key:".dimmed(), paths.1.display());
             println!();
-            println!("{}", "⚠️  Keep your private key secret! Anyone with it can decrypt your files.".yellow());
+            println!(
+                "{}",
+                "⚠️  Keep your private key secret! Anyone with it can decrypt your files.".yellow()
+            );
         }
 
-        Commands::Encrypt { input, recipient, output, sender_key } => {
-            println!("{}", format!("🔒 Encrypting '{}' with ML-KEM-768...", input).cyan().bold());
-            let out_path = encrypt::encrypt_file(&input, &recipient, output.as_deref(), sender_key.as_deref())?;
-            println!("{} {}", "✅".green(), format!("Encrypted → {}", out_path.display()).green().bold());
+        Commands::Encrypt {
+            input,
+            recipient,
+            output,
+            sender_key,
+        } => {
+            println!(
+                "{}",
+                format!("🔒 Encrypting '{}' with ML-KEM-768...", input)
+                    .cyan()
+                    .bold()
+            );
+            let out_path = encrypt::encrypt_file(
+                &input,
+                &recipient,
+                output.as_deref(),
+                sender_key.as_deref(),
+            )?;
+            println!(
+                "{} {}",
+                "✅".green(),
+                format!("Encrypted → {}", out_path.display()).green().bold()
+            );
         }
 
-        Commands::Decrypt { input, private_key, output } => {
+        Commands::Decrypt {
+            input,
+            private_key,
+            output,
+        } => {
             println!("{}", format!("🔓 Decrypting '{}'...", input).cyan().bold());
             let out_path = decrypt::decrypt_file(&input, &private_key, output.as_deref())?;
-            println!("{} {}", "✅".green(), format!("Decrypted → {}", out_path.display()).green().bold());
+            println!(
+                "{} {}",
+                "✅".green(),
+                format!("Decrypted → {}", out_path.display()).green().bold()
+            );
         }
 
         Commands::Info { key_file } => {
