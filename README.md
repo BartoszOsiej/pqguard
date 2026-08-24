@@ -159,7 +159,7 @@ MIT
 ![Top Language](https://img.shields.io/github/languages/top/BartoszOsiej/pqguard?style=flat-square)
 ![Last Commit](https://img.shields.io/github/last-commit/BartoszOsiej/pqguard?style=flat-square)
 ![Repo Size](https://img.shields.io/github/repo-size/BartoszOsiej/pqguard?style=flat-square)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/BartoszOsiej/pqguard/badge)](https://securityscorecards.dev/viewer/?uri=github.com/BartoszOsiej/pqguard)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/BartoszOsiej/pqguard/badge)](https://scorecard.dev/viewer/?uri=github.com/BartoszOsiej/pqguard)
 ---
 
 ## 📺 Demo
