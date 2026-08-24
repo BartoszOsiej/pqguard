@@ -2,10 +2,6 @@ name: Publish to GHCR
 
 on:
   push:
-    permissions:
-      packages: write
-    branches: [main]
-    tags: ['v*']
 
 permissions: read-all
 
