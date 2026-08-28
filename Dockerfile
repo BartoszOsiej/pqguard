@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/li
 
 WORKDIR /app
 COPY Cargo.toml Cargo.lock ./
+COPY benches/ benches/
 COPY src/ src/
 
 RUN cargo build --release && strip target/release/pqguard
