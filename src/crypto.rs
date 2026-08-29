@@ -4,7 +4,9 @@ use aes_gcm::{
 };
 use anyhow::{bail, Result};
 use hkdf::Hkdf;
-use ml_kem::kem::{Ciphertext, Decapsulate, Encapsulate, KeyExport, TryKeyInit as KemTryKeyInit, Kem};
+use ml_kem::kem::{
+    Ciphertext, Decapsulate, Encapsulate, Kem, KeyExport, TryKeyInit as KemTryKeyInit,
+};
 use ml_kem::MlKem768;
 use sha2::Sha256;
 
