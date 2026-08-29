@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Typing SVG](https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&weight=600&size=18&duration=3000&pause=1200&color=58A6FF&center=true&vCenter=true&width=600&height=45&lines=Post-quantum%20file%20encryption%20CLI%20%E2%80%94%20ML-KEM-768%20%2B%20AES-256-GCM)](https://github.com/BartoszOsiej/quantum-shield)
+[![Typing SVG](https://readme-typing-svg.demolab.com/?font=JetBrains+Mono&weight=600&size=18&duration=3000&pause=1200&color=58A6FF&center=true&vCenter=true&width=600&height=45&lines=Post-quantum%20file%20encryption%20CLI%20%E2%80%94%20ML-KEM-768%20%2B%20AES-256-GCM)](https://github.com/BartoszOsiej/pqguard)
 
 </div># 🔒 pqguard
 
