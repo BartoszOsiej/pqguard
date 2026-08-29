@@ -1,12 +1,11 @@
 use aes_gcm::{
-    aead::{Aead, KeyInit, OsRng},
+    aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
 };
 use anyhow::{bail, Result};
 use hkdf::Hkdf;
-use ml_kem::kem::{Decapsulate, Encapsulate};
-use ml_kem::{Encoded, EncodedSizeUser, KemCore, MlKem768};
-use rand::RngCore;
+use ml_kem::kem::{Ciphertext, Decapsulate, Encapsulate, KeyExport, TryKeyInit as KemTryKeyInit, Kem};
+use ml_kem::MlKem768;
 use sha2::Sha256;
 
 pub const KEM_ALG: &str = "ML-KEM-768";
@@ -15,9 +14,9 @@ pub const SALT_LEN: usize = 32;
 pub const NONCE_LEN: usize = 12;
 pub const KEY_LEN: usize = 32;
 
-type DkType = <MlKem768 as KemCore>::DecapsulationKey;
-type EkType = <MlKem768 as KemCore>::EncapsulationKey;
-type CtType = ml_kem::Ciphertext<MlKem768>;
+type DkType = <MlKem768 as Kem>::DecapsulationKey;
+type EkType = <MlKem768 as Kem>::EncapsulationKey;
+type CtType = Ciphertext<MlKem768>;
 
 pub struct SealedEnvelope {
     pub kem_ciphertext: Vec<u8>,
@@ -92,34 +91,26 @@ impl SealedEnvelope {
 }
 
 pub fn generate_kem_keypair() -> Result<(Vec<u8>, Vec<u8>)> {
-    let (dk, ek) = MlKem768::generate(&mut OsRng);
+    let (dk, ek) = MlKem768::generate_keypair();
     // Return (encapsulation_key, decapsulation_key) — (public, private)
-    Ok((ek.as_bytes().to_vec(), dk.as_bytes().to_vec()))
+    Ok((ek.to_bytes().to_vec(), dk.to_bytes().to_vec()))
 }
 
 pub fn kem_encapsulate(encapsulation_key_bytes: &[u8]) -> Result<(Vec<u8>, Vec<u8>)> {
-    let encoded_ek: Encoded<EkType> = encapsulation_key_bytes
-        .try_into()
+    let ek = EkType::new_from_slice(encapsulation_key_bytes)
         .map_err(|_| anyhow::anyhow!("Invalid encapsulation key length"))?;
-    let ek = EkType::from_bytes(&encoded_ek);
-    let (ct, ss) = ek
-        .encapsulate(&mut OsRng)
-        .map_err(|_| anyhow::anyhow!("Encapsulation failed"))?;
+    let (ct, ss) = ek.encapsulate();
     Ok((ss.to_vec(), ct.to_vec()))
 }
 
 pub fn kem_decapsulate(decapsulation_key_bytes: &[u8], ciphertext_bytes: &[u8]) -> Result<Vec<u8>> {
-    let encoded_dk: Encoded<DkType> = decapsulation_key_bytes
-        .try_into()
+    let dk = DkType::new_from_slice(decapsulation_key_bytes)
         .map_err(|_| anyhow::anyhow!("Invalid decapsulation key length"))?;
-    let dk = DkType::from_bytes(&encoded_dk);
     // CtType is Array<u8, Size> — use try_from directly
     let ct: CtType = ciphertext_bytes
         .try_into()
         .map_err(|_| anyhow::anyhow!("Invalid ciphertext length"))?;
-    let ss = dk
-        .decapsulate(&ct)
-        .map_err(|_| anyhow::anyhow!("Decapsulation failed"))?;
+    let ss = dk.decapsulate(&ct);
     Ok(ss.to_vec())
 }
 
@@ -133,13 +124,13 @@ pub fn derive_key(shared_secret: &[u8], salt: &[u8]) -> Result<[u8; KEY_LEN]> {
 
 pub fn generate_salt() -> [u8; SALT_LEN] {
     let mut salt = [0u8; SALT_LEN];
-    OsRng.fill_bytes(&mut salt);
+    getrandom::fill(&mut salt).expect("failed to generate random salt");
     salt
 }
 
 pub fn generate_nonce() -> [u8; NONCE_LEN] {
     let mut nonce = [0u8; NONCE_LEN];
-    OsRng.fill_bytes(&mut nonce);
+    getrandom::fill(&mut nonce).expect("failed to generate random nonce");
     nonce
 }
 
@@ -149,8 +140,9 @@ pub fn symmetric_encrypt(
     data: &[u8],
 ) -> Result<Vec<u8>> {
     let cipher = Aes256Gcm::new_from_slice(key).map_err(|e| anyhow::anyhow!("{}", e))?;
+    let nonce_arr: [u8; NONCE_LEN] = *nonce;
     cipher
-        .encrypt(Nonce::from_slice(nonce), data)
+        .encrypt(&Nonce::from(nonce_arr), data)
         .map_err(|e| anyhow::anyhow!("{}", e))
 }
 
@@ -160,8 +152,9 @@ pub fn symmetric_decrypt(
     ciphertext: &[u8],
 ) -> Result<Vec<u8>> {
     let cipher = Aes256Gcm::new_from_slice(key).map_err(|e| anyhow::anyhow!("{}", e))?;
+    let nonce_arr: [u8; NONCE_LEN] = *nonce;
     cipher
-        .decrypt(Nonce::from_slice(nonce), ciphertext)
+        .decrypt(&Nonce::from(nonce_arr), ciphertext)
         .map_err(|e| anyhow::anyhow!("Decryption failed: {}", e))
 }
 
