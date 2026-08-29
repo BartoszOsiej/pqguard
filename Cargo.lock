@@ -766,25 +766,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pqguard"
-version = "0.1.0"
-dependencies = [
- "aes-gcm",
- "anyhow",
- "base64",
- "clap",
- "colored",
- "criterion",
- "getrandom 0.4.3",
- "hkdf",
- "ml-kem",
- "proptest",
- "rand 0.10.2",
- "sha2",
- "tempfile",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.107"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -810,6 +791,25 @@ dependencies = [
  "rusty-fork",
  "tempfile",
  "unarray",
+]
+
+[[package]]
+name = "quantum-shield"
+version = "0.1.0"
+dependencies = [
+ "aes-gcm",
+ "anyhow",
+ "base64",
+ "clap",
+ "colored",
+ "criterion",
+ "getrandom 0.4.3",
+ "hkdf",
+ "ml-kem",
+ "proptest",
+ "rand 0.10.2",
+ "sha2",
+ "tempfile",
 ]
 
 [[package]]

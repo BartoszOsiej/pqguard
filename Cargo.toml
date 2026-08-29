@@ -1,5 +1,5 @@
 [package]
-name = "quantum-shield"
+name = "pqguard"
 version = "0.1.0"
 edition = "2021"
 description = "Post-quantum file encryption CLI — ML-KEM-768 + AES-256-GCM"
